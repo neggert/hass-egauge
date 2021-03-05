@@ -1,0 +1,15 @@
+{
+  "domain": "egauge",
+  "name": "eGauge",
+  "version": "0.1.0",
+  "documentation": "https://github.com/neggert/egauge",
+  "issue_tracker": "https://github.com/neggert/egauge/issues",
+  "dependencies": [],
+  "config_flow": true,
+  "codeowners": [
+    "@neggert"
+  ],
+  "requirements": [
+    "egauge-async"
+  ]
+}

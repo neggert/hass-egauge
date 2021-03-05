@@ -1,0 +1,135 @@
+"""Sensor platform for integration_blueprint."""
+import asyncio
+
+from .const import (
+    DEFAULT_NAME,
+    DOMAIN,
+    EGAUGE_DEVICE_CLASS,
+    EGAUGE_HISTORICAL,
+    EGAUGE_INSTANTANEOUS,
+    EGAUGE_UNITS,
+    EGAUGE_UNIT_CONVERSIONS,
+    HISTORICAL_INTERVALS,
+    ICON,
+)
+from .entity import EGaugeEntity
+
+from . import _LOGGER
+
+
+async def async_setup_entry(hass, entry, async_add_devices):
+    """Setup sensor platform."""
+    coordinator = hass.data[DOMAIN][entry.entry_id]
+    inst_registers, hist_registers = await asyncio.gather(
+        coordinator.client.get_instantaneous_registers(),
+        coordinator.client.get_historical_registers(),
+    )
+    _LOGGER.debug(f"Instantaneous registers: {inst_registers}")
+    _LOGGER.debug(f"Historical registers: {hist_registers}")
+    devices = [
+        EGaugeSensor(
+            EGAUGE_INSTANTANEOUS,
+            register_name,
+            register_type_code,
+            None,
+            coordinator,
+            entry,
+        )
+        for register_name, register_type_code in inst_registers.items()
+    ]
+    for interval in HISTORICAL_INTERVALS:
+        devices.extend(
+            [
+                EGaugeSensor(
+                    EGAUGE_HISTORICAL,
+                    register_name,
+                    register_type_code,
+                    interval,
+                    coordinator,
+                    entry,
+                )
+                for register_name, register_type_code in hist_registers.items()
+                if register_type_code in EGAUGE_DEVICE_CLASS[EGAUGE_HISTORICAL]
+            ]
+        )
+    async_add_devices(devices)
+
+
+async def async_unload_entry(hass, entry):
+    return True
+
+
+class EGaugeSensor(EGaugeEntity):
+    """eGauge Sensor class."""
+
+    def __init__(
+        self,
+        data_type,
+        register_name,
+        register_type_code,
+        interval,
+        coordinator,
+        config_entry,
+    ):
+        self.data_type = data_type
+        self.register_name = register_name
+        self.register_type_code = register_type_code
+        self.interval = interval
+        self.unit_conversion = EGAUGE_UNIT_CONVERSIONS[self.data_type].get(
+            self.register_type_code, 1.0
+        )
+        super().__init__(coordinator, config_entry)
+
+    @property
+    def is_historical(self):
+        return self.data_type == EGAUGE_HISTORICAL
+
+    @property
+    def unique_id(self):
+        """Return a unique ID to use for this entity."""
+        if self.is_historical:
+            return f"{self.entry_id}-{self.interval}-{self.register_name}"
+        else:
+            return f"{self.entry_id}-{self.register_name}"
+
+    @property
+    def name(self):
+        """Return the name of the sensor."""
+        if self.is_historical:
+            return f"{DEFAULT_NAME} {self.interval} {self.register_name}"
+        else:
+            return f"{DEFAULT_NAME} {self.register_name}"
+
+    @property
+    def state(self):
+        """Return the state of the sensor."""
+        data = self.coordinator.data[self.data_type]
+        if self.is_historical:
+            data = data[self.interval]
+        value = data.get(self.register_name)
+        if value is None:
+            return None
+        value = value * self.unit_conversion
+        return round(value)
+
+    @property
+    def device_state_attributes(self):
+        """Return the state attributes."""
+        return {
+            "integration": DOMAIN,
+            "register_type_code": self.register_type_code,
+            "data_type": self.data_type,
+        }
+
+    @property
+    def unit_of_measurement(self):
+        return EGAUGE_UNITS[self.data_type].get(self.register_type_code)
+
+    @property
+    def device_class(self):
+        return EGAUGE_DEVICE_CLASS[self.data_type].get(self.register_type_code)
+
+    @property
+    def icon(self):
+        """Return the icon of the sensor."""
+        return ICON.get(self.register_type_code)

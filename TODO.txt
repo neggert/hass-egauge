@@ -1,0 +1,12 @@
+x Device info
+x Tests
+Test coverage
+Configure history periods
+x Use one call for history
+x exception at unload
+Egauge-async datarow type
+pass session to EgaugeClient
+x configuration help
+Icon
+x entity icons
+x round numbers

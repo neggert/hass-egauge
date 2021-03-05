@@ -1,0 +1,9 @@
+{
+  "name": "eGauge",
+  "hacs": "1.6.0",
+  "domains": [
+    "sensor"
+  ],
+  "iot_class": "Local Polling",
+  "homeassistant": "0.118.0"
+}

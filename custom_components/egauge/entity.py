@@ -2,8 +2,8 @@
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
-from .const import NAME
 from .const import MODEL
+from .const import NAME
 
 
 class EGaugeEntity(CoordinatorEntity):

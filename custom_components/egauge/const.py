@@ -3,6 +3,7 @@ import enum
 
 from homeassistant.const import (
     DEVICE_CLASS_CURRENT,
+    DEVICE_CLASS_ENERGY,
     DEVICE_CLASS_HUMIDITY,
     DEVICE_CLASS_POWER,
     DEVICE_CLASS_PRESSURE,
@@ -52,7 +53,7 @@ EGAUGE_DEVICE_CLASS = {
         "V": DEVICE_CLASS_VOLTAGE,
     },
     EGAUGE_HISTORICAL: {
-        "P": DEVICE_CLASS_POWER,
+        "P": DEVICE_CLASS_ENERGY,
     },
 }
 

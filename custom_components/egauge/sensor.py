@@ -55,10 +55,6 @@ async def async_setup_entry(hass, entry, async_add_devices):
     async_add_devices(devices)
 
 
-async def async_unload_entry(hass, entry):
-    return True
-
-
 class EGaugeSensor(EGaugeEntity):
     """eGauge Sensor class."""
 
@@ -107,8 +103,6 @@ class EGaugeSensor(EGaugeEntity):
         if self.is_historical:
             data = data[self.interval]
         value = data.get(self.register_name)
-        if value is None:
-            return None
         value = value * self.unit_conversion
         return round(value)
 

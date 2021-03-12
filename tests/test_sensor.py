@@ -1,19 +1,16 @@
-from unittest.mock import patch, AsyncMock
+from unittest.mock import AsyncMock
+from unittest.mock import patch
 
+from custom_components.egauge import async_setup_entry
+from custom_components.egauge import async_unload_entry
+from custom_components.egauge.const import DAILY
+from custom_components.egauge.const import DOMAIN
+from custom_components.egauge.const import EGAUGE_HISTORICAL
+from custom_components.egauge.const import EGAUGE_INSTANTANEOUS
+from custom_components.egauge.const import MONTHLY
+from custom_components.egauge.const import WEEKLY
+from custom_components.egauge.const import YEARLY
 from homeassistant.core import HomeAssistant
-
-from custom_components.egauge import async_setup_entry, async_unload_entry
-from custom_components.egauge.const import (
-    DAILY,
-    DOMAIN,
-    EGAUGE_HISTORICAL,
-    EGAUGE_INSTANTANEOUS,
-    MONTHLY,
-    WEEKLY,
-    YEARLY,
-)
-from custom_components.egauge.sensor import EGaugeSensor
-
 from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from .const import MOCK_CONFIG

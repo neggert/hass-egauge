@@ -7,5 +7,5 @@
   "dependencies": [],
   "config_flow": true,
   "codeowners": ["@neggert"],
-  "requirements": ["egauge-async"]
+  "requirements": ["egauge-async==0.1.0"]
 }

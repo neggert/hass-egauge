@@ -1,33 +1,60 @@
 # eGauge
 
-[![GitHub Release][releases-shield]][releases]
-[![GitHub Activity][commits-shield]][commits]
-[![License][license-shield]](LICENSE)
+## Features
 
-[![pre-commit][pre-commit-shield]][pre-commit]
-[![Black][black-shield]][black]
+This component will set up sensors to track both instantaneous and historical data from
+an eGauge monitor.
 
-[![hacs][hacsbadge]][hacs]
-[![Project Maintenance][maintenance-shield]][user_profile]
-[![BuyMeCoffee][buymecoffeebadge]][buymecoffee]
+### Instantaneous data sensors
 
-[![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
+These show current rate of change for eGauge registers. In the most common usage, these will
+show current power usage in Watts, but other register types are supported.
 
-**TO BE REMOVED: If you need help, as a developer, to use this custom component tempalte,
-please look at the [User Guide in the Cookiecutter documentation](https://cookiecutter-homeassistant-custom-component.readthedocs.io/en/stable/quickstart.html)**
+Supported Instantanous Register Types:
 
-**This component will set up the following platforms.**
+- Humidity
+- Temperature
+- Power
+- Pressure
+- Current
+- Voltage
 
-| Platform        | Description                         |
-| --------------- | ----------------------------------- |
-| `binary_sensor` | Show something `True` or `False`.   |
-| `sensor`        | Show info from eGauge API.          |
-| `switch`        | Switch something `True` or `False`. |
+### Historical data sensors
 
-![example][exampleimg]
+These show historical usage over various time periods. Currently, this component only supports
+historical data for Power register types. In this case, the component reports total energy
+over several time periods, in kWh.
+
+### Sensors created
+
+A set of sensors is created for each real and virtual register configured on the eGauge
+monitor.
+
+Note: Due to quirks of the eGauge API, the total usage and generation registers
+are named slightly differently depending on whether instantaneous or historical data
+is being considered. Instantaneous usage and generation registers are called `use` and `gen`,
+while historical registers for the same quantities are called `total_usage` and
+`total_generation`.
+
+- `sensor.egauge_<register_name>`
+- `sensor.egauge_daily_<register_name>`
+- `sensor.egauge_weekly_<register_name>`
+- `sensor.egauge_monthly_<register_name>`
+- `sensor.egauge_yearly_<register_name>`
 
 ## Installation
+
+### Home Asssistant Community Store (preferred)
+
+1. Install [HACS][hacs] if you haven't already
+2. Follow the [instructions for adding a custom repository](https://hacs.xyz/docs/faq/custom_repositories/)
+3. Use `https://github.com/neggert/hass-egauge` as the custom repository URL
+4. Select "Integration" in the Category drop-down.
+
+Note: this component should be added to the default list soon, which will make this process
+even easier.
+
+### Manual
 
 1. Using the tool of choice open the directory (folder) for your HA configuration (where you find `configuration.yaml`).
 2. If you do not have a `custom_components` directory (folder) there, you need to create it.
@@ -41,25 +68,23 @@ Using your HA configuration directory (folder) as a starting point you should no
 
 ```text
 custom_components/egauge/translations/en.json
-custom_components/egauge/translations/fr.json
-custom_components/egauge/translations/nb.json
-custom_components/egauge/translations/sensor.en.json
-custom_components/egauge/translations/sensor.fr.json
-custom_components/egauge/translations/sensor.nb.json
-custom_components/egauge/translations/sensor.nb.json
 custom_components/egauge/__init__.py
-custom_components/egauge/api.py
-custom_components/egauge/binary_sensor.py
 custom_components/egauge/config_flow.py
 custom_components/egauge/const.py
 custom_components/egauge/manifest.json
 custom_components/egauge/sensor.py
-custom_components/egauge/switch.py
 ```
 
 ## Configuration is done in the UI
 
-<!---->
+- **eGauge URL**: Enter the URL you use to access your eGauge monitor. This may be a hostname
+  such as `http://egauge12345`, an IP address such as `http://192.168.123.123`, or an address
+  proxied through eGauge's servers, such as `http://egauge12345.d.egauge.net`. Note that setting
+  up access through eGauge's proxy servers introduces a cloud dependency.
+- **Username**: Username used to log in to your eGauge. Leave this blank if your device
+  doesn't have authentication enabled.
+- **Password**: Password used to log in to your eGauge. Leave this blank if your device
+  doesn't have authentication enabled.
 
 ## Contributions are welcome!
 
@@ -75,22 +100,8 @@ Code template was mainly taken from [@Ludeeus](https://github.com/ludeeus)'s [in
 
 [integration_blueprint]: https://github.com/custom-components/integration_blueprint
 [black]: https://github.com/psf/black
-[black-shield]: https://img.shields.io/badge/code%20style-black-000000.svg?style=for-the-badge
-[buymecoffee]: https://www.buymeacoffee.com/neggert
-[buymecoffeebadge]: https://img.shields.io/badge/buy%20me%20a%20coffee-donate-yellow.svg?style=for-the-badge
-[commits-shield]: https://img.shields.io/github/commit-activity/y/neggert/egauge.svg?style=for-the-badge
-[commits]: https://github.com/neggert/egauge/commits/main
 [hacs]: https://hacs.xyz
-[hacsbadge]: https://img.shields.io/badge/HACS-Custom-orange.svg?style=for-the-badge
-[discord]: https://discord.gg/Qa5fW2R
-[discord-shield]: https://img.shields.io/discord/330944238910963714.svg?style=for-the-badge
 [exampleimg]: example.png
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg?style=for-the-badge
-[forum]: https://community.home-assistant.io/
-[license-shield]: https://img.shields.io/github/license/neggert/egauge.svg?style=for-the-badge
 [maintenance-shield]: https://img.shields.io/badge/maintainer-%40neggert-blue.svg?style=for-the-badge
-[pre-commit]: https://github.com/pre-commit/pre-commit
-[pre-commit-shield]: https://img.shields.io/badge/pre--commit-enabled-brightgreen?style=for-the-badge
-[releases-shield]: https://img.shields.io/github/release/neggert/egauge.svg?style=for-the-badge
 [releases]: https://github.com/neggert/egauge/releases
 [user_profile]: https://github.com/neggert

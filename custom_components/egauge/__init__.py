@@ -4,10 +4,11 @@ Custom integration to integrate eGauge with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/neggert/egauge
 """
-import asyncio
 import logging
-from datetime import timedelta, datetime
+from datetime import datetime
+from datetime import timedelta
 
+from egauge_async import EgaugeClient
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config
 from homeassistant.core import HomeAssistant
@@ -15,19 +16,18 @@ from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from homeassistant.helpers.update_coordinator import UpdateFailed
 
-from egauge_async import EgaugeClient
-
-from .const import (
-    CONF_EGAUGE_URL,
-    CONF_PASSWORD,
-    EGAUGE_HISTORICAL,
-    EGAUGE_INSTANTANEOUS,
-)
+from .const import CONF_EGAUGE_URL
+from .const import CONF_PASSWORD
 from .const import CONF_USERNAME
+from .const import DAILY
 from .const import DOMAIN
+from .const import EGAUGE_HISTORICAL
+from .const import EGAUGE_INSTANTANEOUS
+from .const import MONTHLY
 from .const import SENSOR
 from .const import STARTUP_MESSAGE
-from .const import DAILY, WEEKLY, MONTHLY, YEARLY
+from .const import WEEKLY
+from .const import YEARLY
 
 SCAN_INTERVAL = timedelta(seconds=30)
 

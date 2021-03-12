@@ -1,11 +1,11 @@
 """Adds config flow for eGauge."""
 import voluptuous as vol
-from homeassistant import config_entries
-from homeassistant.core import callback
-
 from egauge_async import EgaugeClient
+from homeassistant import config_entries
 
-from .const import CONF_EGAUGE_URL, CONF_USERNAME, CONF_PASSWORD
+from .const import CONF_EGAUGE_URL
+from .const import CONF_PASSWORD
+from .const import CONF_USERNAME
 from .const import DOMAIN
 
 

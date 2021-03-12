@@ -1,20 +1,17 @@
 """Sensor platform for integration_blueprint."""
 import asyncio
 
-from .const import (
-    DEFAULT_NAME,
-    DOMAIN,
-    EGAUGE_DEVICE_CLASS,
-    EGAUGE_HISTORICAL,
-    EGAUGE_INSTANTANEOUS,
-    EGAUGE_UNITS,
-    EGAUGE_UNIT_CONVERSIONS,
-    HISTORICAL_INTERVALS,
-    ICON,
-)
-from .entity import EGaugeEntity
-
 from . import _LOGGER
+from .const import DEFAULT_NAME
+from .const import DOMAIN
+from .const import EGAUGE_DEVICE_CLASS
+from .const import EGAUGE_HISTORICAL
+from .const import EGAUGE_INSTANTANEOUS
+from .const import EGAUGE_UNIT_CONVERSIONS
+from .const import EGAUGE_UNITS
+from .const import HISTORICAL_INTERVALS
+from .const import ICON
+from .entity import EGaugeEntity
 
 
 async def async_setup_entry(hass, entry, async_add_devices):

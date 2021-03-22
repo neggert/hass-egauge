@@ -47,9 +47,10 @@ while historical registers for the same quantities are called `total_usage` and
 ### Home Asssistant Community Store (preferred)
 
 1. Install [HACS][hacs] if you haven't already
-2. Follow the [instructions for adding a custom repository](https://hacs.xyz/docs/faq/custom_repositories/)
-3. Use `https://github.com/neggert/hass-egauge` as the custom repository URL
-4. Select "Integration" in the Category drop-down.
+2. Open the Integrations view in the HACS web UI
+3. Click Add Repositories
+4. Search for eGauge
+5. Click Install
 
 Note: this component should be added to the default list soon, which will make this process
 even easier.

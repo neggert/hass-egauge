@@ -6,13 +6,13 @@ from homeassistant.const import DEVICE_CLASS_POWER
 from homeassistant.const import DEVICE_CLASS_PRESSURE
 from homeassistant.const import DEVICE_CLASS_TEMPERATURE
 from homeassistant.const import DEVICE_CLASS_VOLTAGE
-from homeassistant.const import ELECTRICAL_CURRENT_AMPERE
+from homeassistant.const import ELECTRIC_CURRENT_AMPERE
+from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
 from homeassistant.const import ENERGY_KILO_WATT_HOUR
 from homeassistant.const import PERCENTAGE
 from homeassistant.const import POWER_WATT
 from homeassistant.const import PRESSURE_PA
 from homeassistant.const import TEMP_CELSIUS
-from homeassistant.const import VOLT
 
 # Base component constants
 NAME = "eGauge"
@@ -59,8 +59,8 @@ EGAUGE_UNITS = {
         "T": TEMP_CELSIUS,
         "P": POWER_WATT,
         "Pa": PRESSURE_PA,
-        "I": ELECTRICAL_CURRENT_AMPERE,
-        "V": VOLT,
+        "I": ELECTRIC_CURRENT_AMPERE,
+        "V": ELECTRIC_POTENTIAL_VOLT,
     },
     EGAUGE_HISTORICAL: {
         "P": ENERGY_KILO_WATT_HOUR,

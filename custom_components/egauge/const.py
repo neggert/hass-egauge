@@ -1,4 +1,5 @@
 """Constants for eGauge."""
+from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.const import DEVICE_CLASS_CURRENT
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_HUMIDITY
@@ -37,6 +38,7 @@ DEFAULT_NAME = DOMAIN
 
 EGAUGE_INSTANTANEOUS = "instantaneous"
 EGAUGE_HISTORICAL = "historical"
+EGAUGE_TODAY = "today"
 
 # Device Classes by eGauge Register Type Code
 EGAUGE_DEVICE_CLASS = {
@@ -67,6 +69,11 @@ EGAUGE_UNITS = {
     },
 }
 
+EGAUGE_SENSOR_STATE_CLASS = {
+    EGAUGE_INSTANTANEOUS: STATE_CLASS_MEASUREMENT,
+    EGAUGE_HISTORICAL: STATE_CLASS_MEASUREMENT,
+}
+
 ICON = {
     "h": "hass:water-percent",
     "T": "hass:thermometer",
@@ -88,7 +95,8 @@ DAILY = "daily"
 WEEKLY = "weekly"
 MONTHLY = "monthly"
 YEARLY = "yearly"
-HISTORICAL_INTERVALS = [DAILY, WEEKLY, MONTHLY, YEARLY]
+TODAY = "todays"
+HISTORICAL_INTERVALS = [DAILY, WEEKLY, MONTHLY, YEARLY, TODAY]
 
 
 STARTUP_MESSAGE = f"""

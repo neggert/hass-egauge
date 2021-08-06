@@ -1,16 +1,21 @@
 """Sensor platform for integration_blueprint."""
 import asyncio
 
+import homeassistant.util.dt as dt_util
+from homeassistant.components.sensor import SensorEntity
+
 from . import _LOGGER
 from .const import DEFAULT_NAME
 from .const import DOMAIN
 from .const import EGAUGE_DEVICE_CLASS
 from .const import EGAUGE_HISTORICAL
 from .const import EGAUGE_INSTANTANEOUS
+from .const import EGAUGE_SENSOR_STATE_CLASS
 from .const import EGAUGE_UNIT_CONVERSIONS
 from .const import EGAUGE_UNITS
 from .const import HISTORICAL_INTERVALS
 from .const import ICON
+from .const import TODAY
 from .entity import EGaugeEntity
 
 
@@ -52,7 +57,7 @@ async def async_setup_entry(hass, entry, async_add_devices):
     async_add_devices(devices)
 
 
-class EGaugeSensor(EGaugeEntity):
+class EGaugeSensor(EGaugeEntity, SensorEntity):
     """eGauge Sensor class."""
 
     def __init__(
@@ -121,6 +126,16 @@ class EGaugeSensor(EGaugeEntity):
         return EGAUGE_DEVICE_CLASS[self.data_type].get(self.register_type_code)
 
     @property
+    def state_class(self):
+        return EGAUGE_SENSOR_STATE_CLASS[self.data_type]
+
+    @property
     def icon(self):
         """Return the icon of the sensor."""
         return ICON.get(self.register_type_code)
+
+    @property
+    def last_reset(self):
+        if self.is_historical and self.interval == TODAY:
+            return dt_util.start_of_local_day()
+        return None

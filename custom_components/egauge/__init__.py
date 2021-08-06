@@ -5,9 +5,9 @@ For more details about this integration, please refer to
 https://github.com/neggert/egauge
 """
 import logging
-from datetime import datetime
 from datetime import timedelta
 
+import homeassistant.util.dt as dt_util
 from egauge_async import EgaugeClient
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import Config
@@ -26,6 +26,7 @@ from .const import EGAUGE_INSTANTANEOUS
 from .const import MONTHLY
 from .const import SENSOR
 from .const import STARTUP_MESSAGE
+from .const import TODAY
 from .const import WEEKLY
 from .const import YEARLY
 
@@ -84,7 +85,7 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
         """Update data via library."""
         try:
             current_rates = await self.client.get_current_rates()
-            now = datetime.now()
+            now = dt_util.now()
             data = await self.client.get_historical_data(
                 timestamps=[
                     now,
@@ -92,6 +93,7 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                     now - timedelta(days=7),
                     now - timedelta(days=30),
                     now - timedelta(days=365),
+                    dt_util.start_of_local_day(),
                 ]
             )
             historical_data = {
@@ -99,6 +101,7 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 WEEKLY: self._compute_register_diffs(data[2], data[0]),
                 MONTHLY: self._compute_register_diffs(data[3], data[0]),
                 YEARLY: self._compute_register_diffs(data[4], data[0]),
+                TODAY: self._compute_register_diffs(data[5], data[0]),
             }
             return {
                 EGAUGE_INSTANTANEOUS: current_rates,

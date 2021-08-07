@@ -39,7 +39,7 @@ async def test_instantaneous_sensor_creation(
 
         state = hass.states.get("sensor.egauge_power_register")
         assert state
-        assert state.state == "1234"
+        assert state.state == "1234.00"
         assert dict(state.attributes) == {
             "integration": DOMAIN,
             "register_type_code": "P",
@@ -91,7 +91,7 @@ async def test_historical_sensor_creation(
 
         state = hass.states.get("sensor.egauge_daily_power_register")
         assert state
-        assert state.state == "1"
+        assert state.state == "1.00"
         assert dict(state.attributes) == {
             "integration": DOMAIN,
             "register_type_code": "P",
@@ -105,7 +105,7 @@ async def test_historical_sensor_creation(
 
         state = hass.states.get("sensor.egauge_todays_power_register")
         assert state
-        assert state.state == "5"
+        assert state.state == "5.00"
         assert dict(state.attributes) == {
             "integration": DOMAIN,
             "register_type_code": "P",

@@ -106,7 +106,7 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
             data = data[self.interval]
         value = data.get(self.register_name)
         value = value * self.unit_conversion
-        return round(value)
+        return round(value, 2)
 
     @property
     def device_state_attributes(self):

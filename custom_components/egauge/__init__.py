@@ -86,23 +86,27 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
         try:
             current_rates = await self.client.get_current_rates()
             now = dt_util.now()
+
+            # note: these *must* be sorted
             timestamps = [
                 now,
+                dt_util.start_of_local_day(),
                 now - timedelta(days=1),
                 now - timedelta(days=7),
                 now - timedelta(days=30),
                 now - timedelta(days=365),
-                dt_util.start_of_local_day(),
             ]
             _LOGGER.debug(f"Querying eGauge for timestamps {timestamps}")
+
             data = await self.client.get_historical_data(timestamps=timestamps)
             _LOGGER.debug(f"eGauge responded with {data}")
+
             historical_data = {
-                DAILY: self._compute_register_diffs(data[1], data[0]),
-                WEEKLY: self._compute_register_diffs(data[2], data[0]),
-                MONTHLY: self._compute_register_diffs(data[3], data[0]),
-                YEARLY: self._compute_register_diffs(data[4], data[0]),
-                TODAY: self._compute_register_diffs(data[5], data[0]),
+                TODAY: self._compute_register_diffs(data[1], data[0]),
+                DAILY: self._compute_register_diffs(data[2], data[0]),
+                WEEKLY: self._compute_register_diffs(data[3], data[0]),
+                MONTHLY: self._compute_register_diffs(data[4], data[0]),
+                YEARLY: self._compute_register_diffs(data[5], data[0]),
             }
             return {
                 EGAUGE_INSTANTANEOUS: current_rates,

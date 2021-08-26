@@ -3,7 +3,7 @@
 ## Features
 
 This component will set up sensors to track both instantaneous and historical data from
-an eGauge monitor.
+an eGauge monitor. It also integrates with Home Assistant's energy dashboard.
 
 ### Instantaneous data sensors
 
@@ -37,10 +37,50 @@ while historical registers for the same quantities are called `total_usage` and
 `total_generation`.
 
 - `sensor.egauge_<register_name>`
+- `sensor.egauge_todays_<register_name>`
 - `sensor.egauge_daily_<register_name>`
 - `sensor.egauge_weekly_<register_name>`
 - `sensor.egauge_monthly_<register_name>`
 - `sensor.egauge_yearly_<register_name>`
+
+Note that the `todays` and `daily` registers are different. The `todays` registers report
+usage since midnight local time, while the `daily` registers report useage in the previous
+24 hours.
+
+### Energy dashboard
+
+Integrate with Home Assistant's energy dashboard using the `todays` registers. Note that
+the Home Assistant dashboard wants slightly different measurements than eGauge meters
+are normally configured to produce. While eGauge meters are usually configured to measure
+net usage, Home Assistant wants separate sensors for energy consumed and generated. Luckily,
+it is fairly straightforward to configure your eGauge to produce these measurements.
+
+The necessary configuration depends on how your system was installed. You'll need to make
+changes in the "Installation" section of your eGauge settings.
+
+The below diagrams and instructions are assembled from When in doubt, use the guide as an authoritative source.
+
+**Energy dashboard configuration for back-fed solar**
+
+![](img/back-fed-diagram.png)
+
+Here, you have a sensor measuring power to and from the grid. All we need to do is to make sure that the eGauge is recording versions of this measurement that record energy in and out, in addition to the net,
+then configure some virtual registers to report the values.
+
+![](img/back-fed-registers.png)
+
+**Energy dashboard configuration for direct-feed solar**
+
+![](img/direct-feed-diagram.png)
+
+In this setup, we have sensors measuring solar production and total usage by the main panel, but we have to do a little math to figure out how much we're drawing from or producing to the grid. We can do this using template sensors in eGauge. Note I think you need a recent version of the eGauge firmware(4.2.x is known to work).
+
+![](img/direct-feed-registers.png)
+
+**Other setups**
+Consult the [eGauge configuration guide](https://www.egauge.net/media/support/docs/config-guide.pdf).
+Feel free to open a pull request with instructions for your setup if you think it may be helpful for
+others.
 
 ## Installation
 

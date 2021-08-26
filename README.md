@@ -78,6 +78,7 @@ In this setup, we have sensors measuring solar production and total usage by the
 ![](img/direct-feed-registers.png)
 
 **Other setups**
+
 Consult the [eGauge configuration guide](https://www.egauge.net/media/support/docs/config-guide.pdf).
 Feel free to open a pull request with instructions for your setup if you think it may be helpful for
 others.

@@ -1,7 +1,7 @@
 {
   "domain": "egauge",
   "name": "eGauge",
-  "version": "0.3.0",
+  "version": "0.4.0a1",
   "documentation": "https://github.com/neggert/egauge",
   "issue_tracker": "https://github.com/neggert/egauge/issues",
   "dependencies": [],

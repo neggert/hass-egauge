@@ -1,5 +1,4 @@
 """Constants for eGauge."""
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
 from homeassistant.const import DEVICE_CLASS_CURRENT
 from homeassistant.const import DEVICE_CLASS_ENERGY
 from homeassistant.const import DEVICE_CLASS_HUMIDITY
@@ -67,11 +66,6 @@ EGAUGE_UNITS = {
     EGAUGE_HISTORICAL: {
         "P": ENERGY_KILO_WATT_HOUR,
     },
-}
-
-EGAUGE_SENSOR_STATE_CLASS = {
-    EGAUGE_INSTANTANEOUS: STATE_CLASS_MEASUREMENT,
-    EGAUGE_HISTORICAL: STATE_CLASS_MEASUREMENT,
 }
 
 ICON = {

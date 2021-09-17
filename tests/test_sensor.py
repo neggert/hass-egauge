@@ -97,7 +97,6 @@ async def test_historical_sensor_creation(
             "register_type_code": "P",
             "data_type": EGAUGE_HISTORICAL,
             "device_class": "energy",
-            "state_class": "measurement",
             "friendly_name": "egauge daily power_register",
             "unit_of_measurement": "kWh",
             "icon": "hass:flash",
@@ -111,11 +110,10 @@ async def test_historical_sensor_creation(
             "register_type_code": "P",
             "data_type": EGAUGE_HISTORICAL,
             "device_class": "energy",
-            "state_class": "measurement",
+            "state_class": "total_increasing",
             "friendly_name": "egauge todays power_register",
             "unit_of_measurement": "kWh",
             "icon": "hass:flash",
-            "last_reset": dt.isoformat(),
         }
 
     assert await async_unload_entry(hass, config_entry)

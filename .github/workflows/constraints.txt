@@ -1,4 +1,4 @@
-pip>=8.0.3,<20.3 # from home assistant
+pip==22.0.3
 pre-commit==2.17.0
 black==21.9b0
 flake8==4.0.1

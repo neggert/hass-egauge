@@ -109,7 +109,7 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         return f"{value:.2f}"
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the state attributes."""
         return {
             "integration": DOMAIN,

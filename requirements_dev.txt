@@ -1,2 +1,2 @@
 homeassistant
-egauge_async~=0.1.0
+egauge_async==0.1.2

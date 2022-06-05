@@ -2,7 +2,6 @@
   "config": {
     "step": {
       "user": {
-        "title": "eGauge",
         "description": "eGauge login details. Leave Username and Password blank if your eGauge is not configured to require authentication.",
         "data": {
           "egauge_url": "eGauge URL",

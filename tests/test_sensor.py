@@ -34,7 +34,7 @@ async def test_instantaneous_sensor_creation(
         assert await async_setup_entry(hass, config_entry)
         await hass.async_block_till_done()
 
-        registry = await hass.helpers.entity_registry.async_get_registry()
+        registry = hass.helpers.entity_registry.async_get(hass)
         assert "sensor.egauge_power_register" in registry.entities
 
         state = hass.states.get("sensor.egauge_power_register")
@@ -82,7 +82,7 @@ async def test_historical_sensor_creation(
         assert await async_setup_entry(hass, config_entry)
         await hass.async_block_till_done()
 
-        registry = await hass.helpers.entity_registry.async_get_registry()
+        registry = hass.helpers.entity_registry.async_get(hass)
         assert "sensor.egauge_daily_power_register" in registry.entities
         assert "sensor.egauge_weekly_power_register" in registry.entities
         assert "sensor.egauge_monthly_power_register" in registry.entities

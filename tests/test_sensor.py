@@ -2,6 +2,7 @@ from datetime import datetime
 from unittest.mock import AsyncMock
 from unittest.mock import patch
 
+import pytest
 from custom_components.egauge import async_setup_entry
 from custom_components.egauge import async_unload_entry
 from custom_components.egauge.const import DAILY
@@ -18,6 +19,7 @@ from pytest_homeassistant_custom_component.common import MockConfigEntry
 from .const import MOCK_CONFIG
 
 
+@pytest.mark.asyncio
 async def test_instantaneous_sensor_creation(
     hass: HomeAssistant, bypass_get_registers, bypass_get_data
 ):
@@ -54,6 +56,7 @@ async def test_instantaneous_sensor_creation(
     assert await async_unload_entry(hass, config_entry)
 
 
+@pytest.mark.asyncio
 async def test_historical_sensor_creation(
     hass: HomeAssistant, bypass_get_registers, bypass_get_data
 ):

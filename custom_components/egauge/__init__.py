@@ -4,6 +4,7 @@ Custom integration to integrate eGauge with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/neggert/egauge
 """
+
 from datetime import timedelta
 import logging
 
@@ -70,7 +71,6 @@ async def async_setup_entry(
     return True
 
 
-
 class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
     """Class to manage fetching data from the eGauge API."""
 
@@ -124,6 +124,7 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
         end_vals = {k: r.value for k, r in end.registers.items()}
         return {k: end_vals[k] - start_vals[k] for k in end_vals}
 
+
 async def async_unload_entry(
     hass: core.HomeAssistant, entry: config_entries.ConfigEntry
 ) -> bool:
@@ -142,4 +143,3 @@ async def async_reload_entry(
     """Reload config entry."""
     await async_unload_entry(hass, entry)
     await async_setup_entry(hass, entry)
-

@@ -1,4 +1,5 @@
 """Test eGauge setup process."""
+
 import pytest
 from custom_components.egauge import (
     async_reload_entry,

@@ -1,4 +1,5 @@
 """Global fixtures for eGauge integration."""
+
 from unittest.mock import patch
 
 import pytest
@@ -18,8 +19,9 @@ def auto_enable_custom_integrations(enable_custom_integrations):
 @pytest.fixture(name="skip_notifications", autouse=True)
 def skip_notifications_fixture():
     """Skip notification calls."""
-    with patch("homeassistant.components.persistent_notification.async_create"), patch(
-        "homeassistant.components.persistent_notification.async_dismiss"
+    with (
+        patch("homeassistant.components.persistent_notification.async_create"),
+        patch("homeassistant.components.persistent_notification.async_dismiss"),
     ):
         yield
 
@@ -29,8 +31,9 @@ def skip_notifications_fixture():
 @pytest.fixture(name="bypass_get_data")
 def bypass_get_data_fixture():
     """Skip calls to get data from API."""
-    with patch("egauge_async.EgaugeClient.get_current_rates"), patch(
-        "egauge_async.EgaugeClient.get_historical_data"
+    with (
+        patch("egauge_async.EgaugeClient.get_current_rates"),
+        patch("egauge_async.EgaugeClient.get_historical_data"),
     ):
         yield
 
@@ -40,9 +43,10 @@ def bypass_get_data_fixture():
 @pytest.fixture(name="bypass_get_registers")
 def bypass_get_registers_fixture():
     """Skip calls to get data from API."""
-    with patch(
-        "egauge_async.EgaugeClient.get_instantaneous_registers", return_value={}
-    ), patch("egauge_async.EgaugeClient.get_historical_registers", return_value={}):
+    with (
+        patch("egauge_async.EgaugeClient.get_instantaneous_registers", return_value={}),
+        patch("egauge_async.EgaugeClient.get_historical_registers", return_value={}),
+    ):
         yield
 
 
@@ -51,8 +55,11 @@ def bypass_get_registers_fixture():
 @pytest.fixture(name="error_on_get_data")
 def error_get_data_fixture():
     """Simulate error when retrieving data from API."""
-    with patch(
-        "egauge_async.EgaugeClient.get_current_rates",
-        side_effect=Exception,
-    ), patch("egauge_async.EgaugeClient.get_historical_data", side_effect=Exception):
+    with (
+        patch(
+            "egauge_async.EgaugeClient.get_current_rates",
+            side_effect=Exception,
+        ),
+        patch("egauge_async.EgaugeClient.get_historical_data", side_effect=Exception),
+    ):
         yield

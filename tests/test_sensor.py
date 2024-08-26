@@ -25,12 +25,13 @@ async def test_instantaneous_sensor_creation(
 ):
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
 
-    with patch(
-        "egauge_async.EgaugeClient.get_instantaneous_registers"
-    ) as get_registers, patch(
-        "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
-        new_callable=AsyncMock,
-    ) as update:
+    with (
+        patch("egauge_async.EgaugeClient.get_instantaneous_registers") as get_registers,
+        patch(
+            "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
+            new_callable=AsyncMock,
+        ) as update,
+    ):
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {EGAUGE_INSTANTANEOUS: {"power_register": 1234}}
         assert await async_setup_entry(hass, config_entry)
@@ -62,14 +63,14 @@ async def test_historical_sensor_creation(
 ):
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
 
-    with patch(
-        "egauge_async.EgaugeClient.get_historical_registers"
-    ) as get_registers, patch(
-        "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
-        new_callable=AsyncMock,
-    ) as update, patch(
-        "homeassistant.util.dt.start_of_local_day"
-    ) as start_of_day:
+    with (
+        patch("egauge_async.EgaugeClient.get_historical_registers") as get_registers,
+        patch(
+            "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
+            new_callable=AsyncMock,
+        ) as update,
+        patch("homeassistant.util.dt.start_of_local_day") as start_of_day,
+    ):
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {
             EGAUGE_HISTORICAL: {

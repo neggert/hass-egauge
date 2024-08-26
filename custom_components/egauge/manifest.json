@@ -1,12 +1,12 @@
 {
   "domain": "egauge",
   "name": "eGauge",
-  "codeowners": ["@neggert"],
+  "codeowners": ["@neggert", "@jdhorne"],
   "config_flow": true,
   "dependencies": [],
   "documentation": "https://github.com/neggert/egauge",
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/neggert/egauge/issues",
   "requirements": ["egauge-async==0.1.2"],
-  "version": "0.4.1"
+  "version": "1.0.0"
 }

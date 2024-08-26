@@ -2,11 +2,8 @@
 
 import asyncio
 
-from homeassistant.components.sensor import (
-    STATE_CLASS_MEASUREMENT,
-    STATE_CLASS_TOTAL_INCREASING,
-    SensorEntity,
-)
+from homeassistant import core
+from homeassistant.components.sensor import SensorEntity, SensorStateClass
 
 from . import _LOGGER
 from .const import (
@@ -24,8 +21,8 @@ from .const import (
 from .entity import EGaugeEntity
 
 
-async def async_setup_entry(hass, entry, async_add_devices):
-    """Setup sensor platform."""
+async def async_setup_entry(hass: core.HomeAssistant, entry, async_add_devices):
+    """Set up sensor platform."""
     coordinator = hass.data[DOMAIN][entry.entry_id]
     inst_registers, hist_registers = await asyncio.gather(
         coordinator.client.get_instantaneous_registers(),
@@ -73,7 +70,7 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         interval,
         coordinator,
         config_entry,
-    ):
+    ) -> None:
         self.data_type = data_type
         self.register_name = register_name
         self.register_type_code = register_type_code
@@ -92,16 +89,14 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         """Return a unique ID to use for this entity."""
         if self.is_historical:
             return f"{self.entry_id}-{self.interval}-{self.register_name}"
-        else:
-            return f"{self.entry_id}-{self.register_name}"
+        return f"{self.entry_id}-{self.register_name}"
 
     @property
     def name(self):
         """Return the name of the sensor."""
         if self.is_historical:
             return f"{DEFAULT_NAME} {self.interval} {self.register_name}"
-        else:
-            return f"{DEFAULT_NAME} {self.register_name}"
+        return f"{DEFAULT_NAME} {self.register_name}"
 
     @property
     def state(self):
@@ -133,9 +128,9 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
     @property
     def state_class(self):
         if self.data_type == EGAUGE_INSTANTANEOUS:
-            return STATE_CLASS_MEASUREMENT
-        elif self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:
-            return STATE_CLASS_TOTAL_INCREASING
+            return SensorStateClass.STATE_CLASS_MEASUREMENT
+        if self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:
+            return SensorStateClass.STATE_CLASS_TOTAL_INCREASING
         return None
 
     @property

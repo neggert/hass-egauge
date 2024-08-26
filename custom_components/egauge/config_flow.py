@@ -1,12 +1,11 @@
 """Adds config flow for eGauge."""
-import voluptuous as vol
+
 from egauge_async import EgaugeClient
+import voluptuous as vol
+
 from homeassistant import config_entries
 
-from .const import CONF_EGAUGE_URL
-from .const import CONF_PASSWORD
-from .const import CONF_USERNAME
-from .const import DOMAIN
+from .const import CONF_EGAUGE_URL, CONF_PASSWORD, CONF_USERNAME, DOMAIN
 
 
 class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
@@ -15,7 +14,7 @@ class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize."""
         self._errors = {}
 
@@ -62,7 +61,8 @@ class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             client = EgaugeClient(url, username, password)
             await client.get_instantaneous_registers()
             await client.close()
-            return True
-        except Exception:  # pylint: disable=broad-except
+        except Exception:  # pylint: disable=broad-except  # noqa: BLE001
             pass
+        else:
+            return True
         return False

@@ -1,21 +1,26 @@
 """Sensor platform for integration_blueprint."""
+
 import asyncio
 
-from homeassistant.components.sensor import SensorEntity
-from homeassistant.components.sensor import STATE_CLASS_MEASUREMENT
-from homeassistant.components.sensor import STATE_CLASS_TOTAL_INCREASING
+from homeassistant.components.sensor import (
+    STATE_CLASS_MEASUREMENT,
+    STATE_CLASS_TOTAL_INCREASING,
+    SensorEntity,
+)
 
 from . import _LOGGER
-from .const import DEFAULT_NAME
-from .const import DOMAIN
-from .const import EGAUGE_DEVICE_CLASS
-from .const import EGAUGE_HISTORICAL
-from .const import EGAUGE_INSTANTANEOUS
-from .const import EGAUGE_UNIT_CONVERSIONS
-from .const import EGAUGE_UNITS
-from .const import HISTORICAL_INTERVALS
-from .const import ICON
-from .const import TODAY
+from .const import (
+    DEFAULT_NAME,
+    DOMAIN,
+    EGAUGE_DEVICE_CLASS,
+    EGAUGE_HISTORICAL,
+    EGAUGE_INSTANTANEOUS,
+    EGAUGE_UNIT_CONVERSIONS,
+    EGAUGE_UNITS,
+    HISTORICAL_INTERVALS,
+    ICON,
+    TODAY,
+)
 from .entity import EGaugeEntity
 
 

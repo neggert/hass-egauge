@@ -5,6 +5,7 @@ For more details about this integration, please refer to
 https://github.com/neggert/egauge
 """
 
+import logging
 from datetime import timedelta
 import logging
 

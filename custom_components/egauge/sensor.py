@@ -119,8 +119,17 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
             data = data[self.interval]
         value = data.get(self.register_name)
         value = value * self.unit_conversion
-        if self.state_class is SensorStateClass.TOTAL_INCREASING:
+        if self.state_class == SensorStateClass.TOTAL_INCREASING and value < 0:
+            pv = value
             value = abs(value)
+            _LOGGER.debug(
+                "%s is total_increasing: %s -> %s (%s)",
+                self.name,
+                pv,
+                value,
+                f"{value:.2f}",
+            )
+
         return f"{value:.2f}"
 
     @property

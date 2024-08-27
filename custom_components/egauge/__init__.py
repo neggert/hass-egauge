@@ -7,9 +7,10 @@ https://github.com/neggert/egauge
 
 import logging
 from datetime import timedelta
+from typing import override
 
 import homeassistant.util.dt as dt_util
-from egauge_async import EgaugeClient
+from egauge_async import EgaugeClient, data_models
 from homeassistant import config_entries, core, exceptions
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
@@ -34,7 +35,7 @@ SCAN_INTERVAL = timedelta(seconds=30)
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
-async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:
+async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:  # noqa: ARG001
     """Set up the eGauge Power Meter component."""
     # @TODO: Add setup code.
     return True
@@ -95,7 +96,8 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
         self.client = client
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=update_interval)
 
-    async def _async_update_data(self):
+    @override
+    async def _async_update_data(self):  # noqa: ANN202
         """Update data via library."""
         try:
             current_rates = await self.client.get_current_rates()
@@ -110,10 +112,10 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 now - timedelta(days=30),
                 now - timedelta(days=365),
             ]
-            _LOGGER.debug(f"Querying eGauge for timestamps {timestamps}")
+            _LOGGER.debug("Querying eGauge for timestamps %s", timestamps)
 
             data = await self.client.get_historical_data(timestamps=timestamps)
-            _LOGGER.debug(f"eGauge responded with {data}")
+            _LOGGER.debug("eGauge responded with %s", data)
 
             historical_data = {
                 TODAY: self._compute_register_diffs(data[1], data[0]),
@@ -123,7 +125,7 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 YEARLY: self._compute_register_diffs(data[5], data[0]),
             }
         except Exception as exception:
-            _LOGGER.warning(f"Exception fetching eGauge data: {exception}")
+            _LOGGER.warning("Exception fetching eGauge data: %s", exception)
             raise UpdateFailed from exception
         else:
             return {
@@ -131,7 +133,10 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 EGAUGE_HISTORICAL: historical_data,
             }
 
-    def _compute_register_diffs(self, start, end):
+    def _compute_register_diffs(
+        self, start: data_models.DataRow, end: data_models.DataRow
+    ) -> dict[str, int]:
+        # each of these is a dict[str, int]
         start_vals = {k: r.value for k, r in start.registers.items()}
         end_vals = {k: r.value for k, r in end.registers.items()}
         return {k: end_vals[k] - start_vals[k] for k in end_vals}

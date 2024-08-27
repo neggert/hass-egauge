@@ -1,7 +1,6 @@
 """Sensor platform for integration_blueprint."""
 
 import asyncio
-from typing import Any
 
 from homeassistant import core
 from homeassistant.components.sensor import SensorEntity
@@ -66,7 +65,7 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
 
     def __init__(
         self,
-        data_type,
+        data_type: str,
         register_name,
         register_type_code,
         interval,
@@ -84,6 +83,7 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
 
     @property
     def is_historical(self) -> bool:
+        """True if this sensor represents a historical value, false otherwise."""
         return self.data_type == EGAUGE_HISTORICAL
 
     @property
@@ -121,14 +121,17 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
 
     @property
     def unit_of_measurement(self) -> str | None:
+        """Return the units of measurement for the entity."""
         return EGAUGE_UNITS[self.data_type].get(self.register_type_code)
 
     @property
     def device_class(self) -> SensorDeviceClass | None:
+        """Return the device class for use by hass."""
         return EGAUGE_DEVICE_CLASS[self.data_type].get(self.register_type_code)
 
     @property
     def state_class(self) -> SensorStateClass | None:
+        """Return the sensor state class for use by hass."""
         if self.data_type == EGAUGE_INSTANTANEOUS:
             return SensorStateClass.MEASUREMENT
         if self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:

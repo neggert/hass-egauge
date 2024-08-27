@@ -76,7 +76,7 @@ async def async_setup_entry(
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    hass.async_create_task(hass.config_entries.async_forward_entry_setup(entry, SENSOR))
+    await hass.config_entries.async_forward_entry_setups(entry, [SENSOR])
 
     entry.add_update_listener(async_reload_entry)
     return True

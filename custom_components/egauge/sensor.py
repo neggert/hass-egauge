@@ -3,7 +3,8 @@
 import asyncio
 
 from homeassistant import core
-from homeassistant.components.sensor import SensorEntity, SensorStateClass
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor.const import SensorStateClass
 
 from . import _LOGGER
 from .const import (
@@ -128,9 +129,9 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
     @property
     def state_class(self):
         if self.data_type == EGAUGE_INSTANTANEOUS:
-            return SensorStateClass.STATE_CLASS_MEASUREMENT
+            return SensorStateClass.MEASUREMENT
         if self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:
-            return SensorStateClass.STATE_CLASS_TOTAL_INCREASING
+            return SensorStateClass.TOTAL_INCREASING
         return None
 
     @property

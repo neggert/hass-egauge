@@ -1,10 +1,10 @@
 """Adds config flow for eGauge."""
 
-from egauge_async import EgaugeClient
 import voluptuous as vol
-
+from egauge_async import EgaugeClient
 from homeassistant import config_entries
 
+from . import _LOGGER
 from .const import CONF_EGAUGE_URL, CONF_PASSWORD, CONF_USERNAME, DOMAIN
 
 
@@ -39,7 +39,7 @@ class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         return await self._show_config_form(user_input)
 
-    async def _show_config_form(self, user_input):  # pylint: disable=unused-argument
+    async def _show_config_form(self, user_input):  # pylint: disable=unused-argument  # noqa: ARG002
         """Show the configuration form to edit location data."""
         return self.async_show_form(
             step_id="user",
@@ -55,14 +55,14 @@ class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors=self._errors,
         )
 
-    async def _test_credentials(self, url, username, password):
+    async def _test_credentials(self, url: str, username: str, password: str) -> bool:
         """Return true if credentials is valid."""
         try:
             client = EgaugeClient(url, username, password)
             await client.get_instantaneous_registers()
             await client.close()
-        except Exception:  # pylint: disable=broad-except  # noqa: BLE001
-            pass
+        except Exception:  # noqa: BLE001
+            _LOGGER.info("credentials did not validate")
         else:
             return True
         return False

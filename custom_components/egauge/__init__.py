@@ -7,13 +7,11 @@ https://github.com/neggert/egauge
 
 import logging
 from datetime import timedelta
-import logging
 
+import homeassistant.util.dt as dt_util
 from egauge_async import EgaugeClient
-
 from homeassistant import config_entries, core, exceptions
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
-import homeassistant.util.dt as dt_util
 
 from .const import (
     CONF_EGAUGE_URL,
@@ -42,6 +40,18 @@ async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:
     return True
 
 
+# TODO: fix this issue
+# Logger: homeassistant.helpers.frame  # noqa: ERA001
+# Source: helpers/frame.py:151
+# First occurred: 6:02:51 PM (1 occurrences)
+# Last logged: 6:02:51 PM
+#
+# Detected code that calls async_forward_entry_setup for integration egauge with title:
+# http://192.168.xx.xxx and entry_id: XXXXXXXXXXXXXXXX, during setup without
+# awaiting async_forward_entry_setup, which can cause the setup lock to be released
+# before the setup is done. This will stop working in Home Assistant 2025.1. Please
+# report this issue.
+#
 async def async_setup_entry(
     hass: core.HomeAssistant, entry: config_entries.ConfigEntry
 ) -> bool:
@@ -112,13 +122,14 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 MONTHLY: self._compute_register_diffs(data[4], data[0]),
                 YEARLY: self._compute_register_diffs(data[5], data[0]),
             }
+        except Exception as exception:
+            _LOGGER.warning(f"Exception fetching eGauge data: {exception}")
+            raise UpdateFailed from exception
+        else:
             return {
                 EGAUGE_INSTANTANEOUS: current_rates,
                 EGAUGE_HISTORICAL: historical_data,
             }
-        except Exception as exception:
-            _LOGGER.warning(f"Exception fetching eGauge data: {exception}")
-            raise UpdateFailed from exception
 
     def _compute_register_diffs(self, start, end):
         start_vals = {k: r.value for k, r in start.registers.items()}

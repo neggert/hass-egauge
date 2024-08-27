@@ -1,0 +1,25 @@
+[project]
+name = "hass-egauge"
+version = "1.0.0"
+readme = "README.md"
+classifiers = [
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.12,<3.13"
+
+authors = []
+description = ""
+
+[build-system]
+
+[tool.poetry]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = ">=3.12,<3.13"
+colorlog = "6.8.2"
+homeassistant = ">=2024.6.0"
+pip = ">=21.3.1"
+ruff = "0.5.5"
+egauge-async = "0.1.2"

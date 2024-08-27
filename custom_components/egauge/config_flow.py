@@ -1,5 +1,7 @@
 """Adds config flow for eGauge."""
 
+from typing import Any
+
 import voluptuous as vol
 from egauge_async import EgaugeClient
 from homeassistant import config_entries
@@ -18,7 +20,7 @@ class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Initialize."""
         self._errors = {}
 
-    async def async_step_user(self, user_input=None):
+    async def async_step_user(self, user_input: dict[str, Any] | None = None):
         """Handle a flow initialized by the user."""
         self._errors = {}
 
@@ -32,14 +34,16 @@ class EGaugeFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 return self.async_create_entry(
                     title=user_input[CONF_EGAUGE_URL], data=user_input
                 )
-            else:
-                self._errors["base"] = "auth"
 
+            self._errors["base"] = "auth"
             return await self._show_config_form(user_input)
 
         return await self._show_config_form(user_input)
 
-    async def _show_config_form(self, user_input):  # pylint: disable=unused-argument  # noqa: ARG002
+    async def _show_config_form(
+        self,
+        user_input: dict[str, Any] | None = None,  # noqa: ARG002
+    ) -> config_entries.ConfigFlowResult:
         """Show the configuration form to edit location data."""
         return self.async_show_form(
             step_id="user",

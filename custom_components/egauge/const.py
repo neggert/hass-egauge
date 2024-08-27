@@ -26,7 +26,7 @@ SENSOR = "sensor"
 # Configuration and options
 CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+CONF_PASSWORD = "password"  # noqa: S105
 CONF_EGAUGE_URL = "egauge_url"
 
 # Defaults

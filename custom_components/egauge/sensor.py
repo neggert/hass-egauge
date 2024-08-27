@@ -1,10 +1,11 @@
 """Sensor platform for integration_blueprint."""
 
 import asyncio
+from typing import Any
 
 from homeassistant import core
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.components.sensor.const import SensorStateClass
+from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
 
 from . import _LOGGER
 from .const import (
@@ -29,8 +30,8 @@ async def async_setup_entry(hass: core.HomeAssistant, entry, async_add_devices):
         coordinator.client.get_instantaneous_registers(),
         coordinator.client.get_historical_registers(),
     )
-    _LOGGER.debug(f"Instantaneous registers: {inst_registers}")
-    _LOGGER.debug(f"Historical registers: {hist_registers}")
+    _LOGGER.debug("Instantaneous registers: %s", inst_registers)
+    _LOGGER.debug("Historical registers: %s", hist_registers)
     devices = [
         EGaugeSensor(
             EGAUGE_INSTANTANEOUS,
@@ -82,25 +83,25 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         super().__init__(coordinator, config_entry)
 
     @property
-    def is_historical(self):
+    def is_historical(self) -> bool:
         return self.data_type == EGAUGE_HISTORICAL
 
     @property
-    def unique_id(self):
+    def unique_id(self) -> str:
         """Return a unique ID to use for this entity."""
         if self.is_historical:
             return f"{self.entry_id}-{self.interval}-{self.register_name}"
         return f"{self.entry_id}-{self.register_name}"
 
     @property
-    def name(self):
+    def name(self) -> str:
         """Return the name of the sensor."""
         if self.is_historical:
             return f"{DEFAULT_NAME} {self.interval} {self.register_name}"
         return f"{DEFAULT_NAME} {self.register_name}"
 
     @property
-    def state(self):
+    def state(self) -> str:
         """Return the state of the sensor."""
         data = self.coordinator.data[self.data_type]
         if self.is_historical:
@@ -110,7 +111,7 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         return f"{value:.2f}"
 
     @property
-    def extra_state_attributes(self):
+    def extra_state_attributes(self) -> dict:
         """Return the state attributes."""
         return {
             "integration": DOMAIN,
@@ -119,15 +120,15 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         }
 
     @property
-    def unit_of_measurement(self):
+    def unit_of_measurement(self) -> str | None:
         return EGAUGE_UNITS[self.data_type].get(self.register_type_code)
 
     @property
-    def device_class(self):
+    def device_class(self) -> SensorDeviceClass | None:
         return EGAUGE_DEVICE_CLASS[self.data_type].get(self.register_type_code)
 
     @property
-    def state_class(self):
+    def state_class(self) -> SensorStateClass | None:
         if self.data_type == EGAUGE_INSTANTANEOUS:
             return SensorStateClass.MEASUREMENT
         if self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:
@@ -135,6 +136,6 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         return None
 
     @property
-    def icon(self):
+    def icon(self) -> str | None:
         """Return the icon of the sensor."""
         return ICON.get(self.register_type_code)

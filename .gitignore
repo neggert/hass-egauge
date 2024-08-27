@@ -4,3 +4,9 @@ pythonenv*
 .coverage
 venv
 .venv
+config/*.log*
+config/*.db*
+config/.*
+config/blueprints
+config/deps
+config/tts

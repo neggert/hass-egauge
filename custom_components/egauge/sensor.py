@@ -79,6 +79,17 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         self.unit_conversion = EGAUGE_UNIT_CONVERSIONS[self.data_type].get(
             self.register_type_code, 1.0
         )
+
+        _LOGGER.info(
+            "register_name: %s  type: %s  register_type_code: %s  interval: %s  "
+            "unit_conversion: %s",
+            self.register_name,
+            self.data_type,
+            self.register_type_code,
+            self.interval,
+            self.unit_conversion,
+        )
+
         super().__init__(coordinator, config_entry)
 
     @property
@@ -108,6 +119,8 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
             data = data[self.interval]
         value = data.get(self.register_name)
         value = value * self.unit_conversion
+        if self.state_class is SensorStateClass.TOTAL_INCREASING:
+            value = abs(value)
         return f"{value:.2f}"
 
     @property

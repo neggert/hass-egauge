@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+# from https://github.com/ludeeus/integration_blueprint/blob/main/scripts/setup
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+python3 -m pip install --requirement requirements.txt

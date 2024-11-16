@@ -80,5 +80,5 @@ jobs:
             --durations=10 \
             -n auto \
             -p no:sugar \
-            --aynsio-mode=auto \
+            --asyncio-mode=auto \
             tests

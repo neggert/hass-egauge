@@ -11,7 +11,7 @@ on:
     - cron: "0 0 * * *"
 
 env:
-  DEFAULT_PYTHON: "3.10"
+  DEFAULT_PYTHON: "3.12"
 
 jobs:
   pre-commit:
@@ -82,4 +82,5 @@ jobs:
             --durations=10 \
             -n auto \
             -p no:sugar \
+            --aynsio-mode=auto \
             tests

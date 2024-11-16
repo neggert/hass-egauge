@@ -1,5 +1,4 @@
 """Test eGauge setup process."""
-
 import pytest
 from custom_components.egauge import (
     async_reload_entry,
@@ -40,12 +39,16 @@ async def test_setup_unload_and_reload_entry(
     await hass.config_entries.async_setup(config_entry.entry_id)
     await hass.async_block_till_done()
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
-    assert type(hass.data[DOMAIN][config_entry.entry_id]) == EGaugeDataUpdateCoordinator
+    assert isinstance(
+        hass.data[DOMAIN][config_entry.entry_id], EGaugeDataUpdateCoordinator
+    )
 
     # Reload the entry and assert that the data from above is still there
     assert await async_reload_entry(hass, config_entry) is None
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
-    assert type(hass.data[DOMAIN][config_entry.entry_id]) == EGaugeDataUpdateCoordinator
+    assert isinstance(
+        hass.data[DOMAIN][config_entry.entry_id], EGaugeDataUpdateCoordinator
+    )
 
     # Unload the entry and verify that the data has been removed
     assert await async_unload_entry(hass, config_entry)

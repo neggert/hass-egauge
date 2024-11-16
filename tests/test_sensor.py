@@ -67,7 +67,9 @@ async def test_historical_sensor_creation(
     ) as get_registers, patch(
         "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
         new_callable=AsyncMock,
-    ) as update, patch("homeassistant.util.dt.start_of_local_day") as start_of_day:
+    ) as update, patch(
+        "homeassistant.util.dt.start_of_local_day"
+    ) as start_of_day:
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {
             EGAUGE_HISTORICAL: {

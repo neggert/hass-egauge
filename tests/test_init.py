@@ -1,20 +1,16 @@
 """Test eGauge setup process."""
+
+from homeassistant.exceptions import ConfigEntryNotReady
 import pytest
+from pytest_homeassistant_custom_component.common import MockConfigEntry
+
 from custom_components.egauge import (
+    EGaugeDataUpdateCoordinator,
     async_reload_entry,
-)
-from custom_components.egauge import (
     async_setup_entry,
-)
-from custom_components.egauge import (
     async_unload_entry,
 )
-from custom_components.egauge import EGaugeDataUpdateCoordinator
-from custom_components.egauge.const import (
-    DOMAIN,
-)
-from homeassistant.exceptions import ConfigEntryNotReady
-from pytest_homeassistant_custom_component.common import MockConfigEntry
+from custom_components.egauge.const import DOMAIN
 
 from .const import MOCK_CONFIG
 

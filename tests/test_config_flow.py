@@ -1,12 +1,11 @@
 """Test eGauge config flow."""
+
 from unittest.mock import patch
 
+from homeassistant import config_entries, data_entry_flow
 import pytest
-from custom_components.egauge.const import (
-    DOMAIN,
-)
-from homeassistant import config_entries
-from homeassistant import data_entry_flow
+
+from custom_components.egauge.const import DOMAIN
 
 from .const import MOCK_CONFIG
 

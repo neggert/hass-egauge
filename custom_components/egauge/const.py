@@ -1,18 +1,21 @@
 """Constants for eGauge."""
-from homeassistant.const import DEVICE_CLASS_CURRENT
-from homeassistant.const import DEVICE_CLASS_ENERGY
-from homeassistant.const import DEVICE_CLASS_HUMIDITY
-from homeassistant.const import DEVICE_CLASS_POWER
-from homeassistant.const import DEVICE_CLASS_PRESSURE
-from homeassistant.const import DEVICE_CLASS_TEMPERATURE
-from homeassistant.const import DEVICE_CLASS_VOLTAGE
-from homeassistant.const import ELECTRIC_CURRENT_AMPERE
-from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
-from homeassistant.const import ENERGY_KILO_WATT_HOUR
-from homeassistant.const import PERCENTAGE
-from homeassistant.const import POWER_WATT
-from homeassistant.const import PRESSURE_PA
-from homeassistant.const import TEMP_CELSIUS
+
+from homeassistant.const import (
+    DEVICE_CLASS_CURRENT,
+    DEVICE_CLASS_ENERGY,
+    DEVICE_CLASS_HUMIDITY,
+    DEVICE_CLASS_POWER,
+    DEVICE_CLASS_PRESSURE,
+    DEVICE_CLASS_TEMPERATURE,
+    DEVICE_CLASS_VOLTAGE,
+    ELECTRIC_CURRENT_AMPERE,
+    ELECTRIC_POTENTIAL_VOLT,
+    ENERGY_KILO_WATT_HOUR,
+    PERCENTAGE,
+    POWER_WATT,
+    PRESSURE_PA,
+    TEMP_CELSIUS,
+)
 
 # Base component constants
 NAME = "eGauge"

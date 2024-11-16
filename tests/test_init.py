@@ -1,4 +1,5 @@
 """Test eGauge setup process."""
+
 import pytest
 from custom_components.egauge import (
     async_reload_entry,
@@ -35,7 +36,9 @@ async def test_setup_unload_and_reload_entry(
     # Set up the entry and assert that the values set during setup are where we expect
     # them to be. Because we have patched the EGaugeDataUpdateCoordinator.async_get_data
     # call, no code from custom_components/egauge/api.py actually runs.
-    assert await async_setup_entry(hass, config_entry)
+    config_entry.add_to_hass(hass)
+    await hass.config_entries.async_setup(config_entry.entry_id)
+    await hass.async_block_till_done()
     assert DOMAIN in hass.data and config_entry.entry_id in hass.data[DOMAIN]
     assert type(hass.data[DOMAIN][config_entry.entry_id]) == EGaugeDataUpdateCoordinator
 

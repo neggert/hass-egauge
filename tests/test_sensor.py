@@ -3,7 +3,6 @@ from unittest.mock import AsyncMock
 from unittest.mock import patch
 
 import pytest
-from custom_components.egauge import async_setup_entry
 from custom_components.egauge import async_unload_entry
 from custom_components.egauge.const import DAILY
 from custom_components.egauge.const import DOMAIN
@@ -33,10 +32,11 @@ async def test_instantaneous_sensor_creation(
     ) as update:
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {EGAUGE_INSTANTANEOUS: {"power_register": 1234}}
-        assert await async_setup_entry(hass, config_entry)
+        config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()
 
-        registry = hass.helpers.entity_registry.async_get(hass)
+        registry = hass.helpers.entity_registry.async_get()
         assert "sensor.egauge_power_register" in registry.entities
 
         state = hass.states.get("sensor.egauge_power_register")
@@ -67,9 +67,7 @@ async def test_historical_sensor_creation(
     ) as get_registers, patch(
         "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
         new_callable=AsyncMock,
-    ) as update, patch(
-        "homeassistant.util.dt.start_of_local_day"
-    ) as start_of_day:
+    ) as update, patch("homeassistant.util.dt.start_of_local_day") as start_of_day:
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {
             EGAUGE_HISTORICAL: {
@@ -82,10 +80,11 @@ async def test_historical_sensor_creation(
         }
         dt = datetime(2020, 1, 1)
         start_of_day.return_value = dt
-        assert await async_setup_entry(hass, config_entry)
+        config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()
 
-        registry = hass.helpers.entity_registry.async_get(hass)
+        registry = hass.helpers.entity_registry.async_get()
         assert "sensor.egauge_daily_power_register" in registry.entities
         assert "sensor.egauge_weekly_power_register" in registry.entities
         assert "sensor.egauge_monthly_power_register" in registry.entities

@@ -19,11 +19,11 @@ repos:
     rev: "7.1.1" # pick a git hash / tag to point to
     hooks:
       - id: flake8
-  - repo: https://github.com/asottile/reorder-python-imports
-    rev: v3.14.0
+  - repo: https://github.com/pycqa/isort
+    rev: 5.13.2
     hooks:
-      - id: reorder-python-imports
-        args: [--application-directories=custom_components]
+      - id: isort
+        name: isort (python)
   - repo: https://github.com/pre-commit/mirrors-prettier
     rev: v2.2.1
     hooks:

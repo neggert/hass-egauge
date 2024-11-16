@@ -26,7 +26,7 @@ jobs:
 
       - name: Upgrade pip
         run: |
-          pip install --constraint=.github/workflows/constraints.txt pip
+          pip install -r .github/workflows/constraints.txt
           pip --version
 
       - name: Install Python modules

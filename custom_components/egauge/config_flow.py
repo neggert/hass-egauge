@@ -2,7 +2,6 @@
 
 from typing import Any
 
-import voluptuous as vol
 from egauge_async import EgaugeClient
 from homeassistant import config_entries
 import voluptuous as vol

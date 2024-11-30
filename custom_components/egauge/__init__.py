@@ -5,15 +5,14 @@ For more details about this integration, please refer to
 https://github.com/neggert/egauge
 """
 
-from datetime import timedelta
 import logging
+from datetime import timedelta
+from typing import override
 
-from egauge_async import EgaugeClient
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import Config, HomeAssistant
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 import homeassistant.util.dt as dt_util
+from egauge_async import EgaugeClient, data_models
+from homeassistant import config_entries, core, exceptions
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import (
     CONF_EGAUGE_URL,
@@ -36,12 +35,15 @@ SCAN_INTERVAL = timedelta(seconds=30)
 _LOGGER: logging.Logger = logging.getLogger(__package__)
 
 
-async def async_setup(hass: HomeAssistant, config: Config):
-    """Set up this integration using YAML is not supported."""
+async def async_setup(hass: core.HomeAssistant, config: dict) -> bool:  # noqa: ARG001
+    """Set up the eGauge Power Meter component."""
+    # @TODO: Add setup code.
     return True
 
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
+async def async_setup_entry(
+    hass: core.HomeAssistant, entry: config_entries.ConfigEntry
+) -> bool:
     """Set up this integration using UI."""
     if hass.data.get(DOMAIN) is None:
         hass.data.setdefault(DOMAIN, {})
@@ -59,11 +61,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     await coordinator.async_refresh()
 
     if not coordinator.last_update_success:
-        raise ConfigEntryNotReady
+        raise exceptions.ConfigEntryNotReady
 
     hass.data[DOMAIN][entry.entry_id] = coordinator
 
-    hass.async_create_task(hass.config_entries.async_forward_entry_setup(entry, SENSOR))
+    await hass.config_entries.async_forward_entry_setups(entry, [SENSOR])
 
     entry.add_update_listener(async_reload_entry)
     return True
@@ -74,7 +76,7 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
 
     def __init__(
         self,
-        hass: HomeAssistant,
+        hass: core.HomeAssistant,
         client: EgaugeClient,
         update_interval: timedelta,
     ) -> None:
@@ -82,7 +84,8 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
         self.client = client
         super().__init__(hass, _LOGGER, name=DOMAIN, update_interval=update_interval)
 
-    async def _async_update_data(self):
+    @override
+    async def _async_update_data(self):  # noqa: ANN202
         """Update data via library."""
         try:
             current_rates = await self.client.get_current_rates()
@@ -97,10 +100,10 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 now - timedelta(days=30),
                 now - timedelta(days=365),
             ]
-            _LOGGER.debug(f"Querying eGauge for timestamps {timestamps}")
+            _LOGGER.debug("Querying eGauge for timestamps %s", timestamps)
 
             data = await self.client.get_historical_data(timestamps=timestamps)
-            _LOGGER.debug(f"eGauge responded with {data}")
+            _LOGGER.debug("eGauge responded with %s", data)
 
             historical_data = {
                 TODAY: self._compute_register_diffs(data[1], data[0]),
@@ -109,22 +112,27 @@ class EGaugeDataUpdateCoordinator(DataUpdateCoordinator):
                 MONTHLY: self._compute_register_diffs(data[4], data[0]),
                 YEARLY: self._compute_register_diffs(data[5], data[0]),
             }
+        except Exception as exception:
+            _LOGGER.warning("Exception fetching eGauge data: %s", exception)
+            raise UpdateFailed from exception
+        else:
             return {
                 EGAUGE_INSTANTANEOUS: current_rates,
                 EGAUGE_HISTORICAL: historical_data,
             }
-        except Exception as exception:
-            _LOGGER.warning(f"Exception fetching eGauge data: {exception}")
-            raise UpdateFailed() from exception
 
-    def _compute_register_diffs(self, start, end):
+    def _compute_register_diffs(
+        self, start: data_models.DataRow, end: data_models.DataRow
+    ) -> dict[str, int]:
+        # each of these is a dict[str, int]
         start_vals = {k: r.value for k, r in start.registers.items()}
         end_vals = {k: r.value for k, r in end.registers.items()}
-        diff = {k: end_vals[k] - start_vals[k] for k in end_vals.keys()}
-        return diff
+        return {k: end_vals[k] - start_vals[k] for k in end_vals}
 
 
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+async def async_unload_entry(
+    hass: core.HomeAssistant, entry: config_entries.ConfigEntry
+) -> bool:
     """Handle removal of an entry."""
     unloaded = await hass.config_entries.async_forward_entry_unload(entry, SENSOR)
     if unloaded:
@@ -134,7 +142,9 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     return unloaded
 
 
-async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
+async def async_reload_entry(
+    hass: core.HomeAssistant, entry: config_entries.ConfigEntry
+) -> None:
     """Reload config entry."""
     await async_unload_entry(hass, entry)
     await async_setup_entry(hass, entry)

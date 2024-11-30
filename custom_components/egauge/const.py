@@ -1,26 +1,20 @@
 """Constants for eGauge."""
 
+from homeassistant.components.sensor.const import SensorDeviceClass
 from homeassistant.const import (
-    DEVICE_CLASS_CURRENT,
-    DEVICE_CLASS_ENERGY,
-    DEVICE_CLASS_HUMIDITY,
-    DEVICE_CLASS_POWER,
-    DEVICE_CLASS_PRESSURE,
-    DEVICE_CLASS_TEMPERATURE,
-    DEVICE_CLASS_VOLTAGE,
-    ELECTRIC_CURRENT_AMPERE,
-    ELECTRIC_POTENTIAL_VOLT,
-    ENERGY_KILO_WATT_HOUR,
     PERCENTAGE,
-    POWER_WATT,
-    PRESSURE_PA,
-    TEMP_CELSIUS,
+    UnitOfElectricCurrent,
+    UnitOfElectricPotential,
+    UnitOfEnergy,
+    UnitOfPower,
+    UnitOfPressure,
+    UnitOfTemperature,
 )
 
 # Base component constants
+DOMAIN = "egauge"
 NAME = "eGauge"
 MODEL = "XML API"
-DOMAIN = "egauge"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.0"
 
@@ -32,7 +26,7 @@ SENSOR = "sensor"
 # Configuration and options
 CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+CONF_PASSWORD = "password"  # noqa: S105
 CONF_EGAUGE_URL = "egauge_url"
 
 # Defaults
@@ -45,29 +39,29 @@ EGAUGE_TODAY = "today"
 # Device Classes by eGauge Register Type Code
 EGAUGE_DEVICE_CLASS = {
     EGAUGE_INSTANTANEOUS: {
-        "h": DEVICE_CLASS_HUMIDITY,
-        "T": DEVICE_CLASS_TEMPERATURE,
-        "P": DEVICE_CLASS_POWER,
-        "Pa": DEVICE_CLASS_PRESSURE,
-        "I": DEVICE_CLASS_CURRENT,
-        "V": DEVICE_CLASS_VOLTAGE,
+        "h": SensorDeviceClass.HUMIDITY,
+        "T": SensorDeviceClass.TEMPERATURE,
+        "P": SensorDeviceClass.POWER,
+        "Pa": SensorDeviceClass.PRESSURE,
+        "I": SensorDeviceClass.CURRENT,
+        "V": SensorDeviceClass.VOLTAGE,
     },
     EGAUGE_HISTORICAL: {
-        "P": DEVICE_CLASS_ENERGY,
+        "P": SensorDeviceClass.ENERGY,
     },
 }
 
 EGAUGE_UNITS = {
     EGAUGE_INSTANTANEOUS: {
         "h": PERCENTAGE,
-        "T": TEMP_CELSIUS,
-        "P": POWER_WATT,
-        "Pa": PRESSURE_PA,
-        "I": ELECTRIC_CURRENT_AMPERE,
-        "V": ELECTRIC_POTENTIAL_VOLT,
+        "T": UnitOfTemperature.CELSIUS,
+        "P": UnitOfPower.WATT,
+        "Pa": UnitOfPressure.PA,
+        "I": UnitOfElectricCurrent.AMPERE,
+        "V": UnitOfElectricPotential.VOLT,
     },
     EGAUGE_HISTORICAL: {
-        "P": ENERGY_KILO_WATT_HOUR,
+        "P": UnitOfEnergy.KILO_WATT_HOUR,
     },
 }
 

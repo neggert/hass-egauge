@@ -1,23 +1,19 @@
 """Constants for eGauge."""
-from homeassistant.const import DEVICE_CLASS_CURRENT
-from homeassistant.const import DEVICE_CLASS_ENERGY
-from homeassistant.const import DEVICE_CLASS_HUMIDITY
-from homeassistant.const import DEVICE_CLASS_POWER
-from homeassistant.const import DEVICE_CLASS_PRESSURE
-from homeassistant.const import DEVICE_CLASS_TEMPERATURE
-from homeassistant.const import DEVICE_CLASS_VOLTAGE
-from homeassistant.const import ELECTRIC_CURRENT_AMPERE
-from homeassistant.const import ELECTRIC_POTENTIAL_VOLT
-from homeassistant.const import ENERGY_KILO_WATT_HOUR
-from homeassistant.const import PERCENTAGE
-from homeassistant.const import POWER_WATT
-from homeassistant.const import PRESSURE_PA
-from homeassistant.const import TEMP_CELSIUS
+from homeassistant.components.sensor.const import SensorDeviceClass
+from homeassistant.const import (
+    PERCENTAGE,
+    UnitOfElectricCurrent,
+    UnitOfElectricPotential,
+    UnitOfEnergy,
+    UnitOfPower,
+    UnitOfPressure,
+    UnitOfTemperature,
+)
 
 # Base component constants
+DOMAIN = "egauge"
 NAME = "eGauge"
 MODEL = "XML API"
-DOMAIN = "egauge"
 DOMAIN_DATA = f"{DOMAIN}_data"
 VERSION = "0.0.0"
 
@@ -29,7 +25,7 @@ SENSOR = "sensor"
 # Configuration and options
 CONF_ENABLED = "enabled"
 CONF_USERNAME = "username"
-CONF_PASSWORD = "password"
+CONF_PASSWORD = "password"  # noqa: S105
 CONF_EGAUGE_URL = "egauge_url"
 
 # Defaults
@@ -42,29 +38,29 @@ EGAUGE_TODAY = "today"
 # Device Classes by eGauge Register Type Code
 EGAUGE_DEVICE_CLASS = {
     EGAUGE_INSTANTANEOUS: {
-        "h": DEVICE_CLASS_HUMIDITY,
-        "T": DEVICE_CLASS_TEMPERATURE,
-        "P": DEVICE_CLASS_POWER,
-        "Pa": DEVICE_CLASS_PRESSURE,
-        "I": DEVICE_CLASS_CURRENT,
-        "V": DEVICE_CLASS_VOLTAGE,
+        "h": SensorDeviceClass.HUMIDITY,
+        "T": SensorDeviceClass.TEMPERATURE,
+        "P": SensorDeviceClass.POWER,
+        "Pa": SensorDeviceClass.PRESSURE,
+        "I": SensorDeviceClass.CURRENT,
+        "V": SensorDeviceClass.VOLTAGE,
     },
     EGAUGE_HISTORICAL: {
-        "P": DEVICE_CLASS_ENERGY,
+        "P": SensorDeviceClass.ENERGY,
     },
 }
 
 EGAUGE_UNITS = {
     EGAUGE_INSTANTANEOUS: {
         "h": PERCENTAGE,
-        "T": TEMP_CELSIUS,
-        "P": POWER_WATT,
-        "Pa": PRESSURE_PA,
-        "I": ELECTRIC_CURRENT_AMPERE,
-        "V": ELECTRIC_POTENTIAL_VOLT,
+        "T": UnitOfTemperature.CELSIUS,
+        "P": UnitOfPower.WATT,
+        "Pa": UnitOfPressure.PA,
+        "I": UnitOfElectricCurrent.AMPERE,
+        "V": UnitOfElectricPotential.VOLT,
     },
     EGAUGE_HISTORICAL: {
-        "P": ENERGY_KILO_WATT_HOUR,
+        "P": UnitOfEnergy.KILO_WATT_HOUR,
     },
 }
 

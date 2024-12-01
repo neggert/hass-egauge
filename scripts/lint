@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+
+# from https://github.com/ludeeus/integration_blueprint/blob/main/scripts/lint
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+ruff format .
+ruff check . --fix

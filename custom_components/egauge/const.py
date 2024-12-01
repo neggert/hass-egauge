@@ -1,4 +1,5 @@
 """Constants for eGauge."""
+
 from homeassistant.components.sensor.const import SensorDeviceClass
 from homeassistant.const import (
     PERCENTAGE,

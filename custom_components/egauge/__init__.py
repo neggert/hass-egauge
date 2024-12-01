@@ -4,14 +4,15 @@ Custom integration to integrate eGauge with Home Assistant.
 For more details about this integration, please refer to
 https://github.com/neggert/egauge
 """
-import logging
+
 from datetime import timedelta
+import logging
 from typing import override
 
-import homeassistant.util.dt as dt_util
 from egauge_async import EgaugeClient, data_models
 from homeassistant import config_entries, core, exceptions
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
+import homeassistant.util.dt as dt_util
 
 from .const import (
     CONF_EGAUGE_URL,

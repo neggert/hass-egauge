@@ -1,4 +1,5 @@
 """Sensor platform for integration_blueprint."""
+
 import asyncio
 
 from homeassistant import core

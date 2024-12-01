@@ -1,20 +1,21 @@
 from datetime import datetime
-from unittest.mock import AsyncMock
-from unittest.mock import patch
+from unittest.mock import AsyncMock, patch
 
-import pytest
-from custom_components.egauge import async_setup_entry
-from custom_components.egauge import async_unload_entry
-from custom_components.egauge.const import DAILY
-from custom_components.egauge.const import DOMAIN
-from custom_components.egauge.const import EGAUGE_HISTORICAL
-from custom_components.egauge.const import EGAUGE_INSTANTANEOUS
-from custom_components.egauge.const import MONTHLY
-from custom_components.egauge.const import TODAY
-from custom_components.egauge.const import WEEKLY
-from custom_components.egauge.const import YEARLY
 from homeassistant.core import HomeAssistant
+import pytest
 from pytest_homeassistant_custom_component.common import MockConfigEntry
+
+from custom_components.egauge import async_unload_entry
+from custom_components.egauge.const import (
+    DAILY,
+    DOMAIN,
+    EGAUGE_HISTORICAL,
+    EGAUGE_INSTANTANEOUS,
+    MONTHLY,
+    TODAY,
+    WEEKLY,
+    YEARLY,
+)
 
 from .const import MOCK_CONFIG
 
@@ -33,10 +34,11 @@ async def test_instantaneous_sensor_creation(
     ) as update:
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {EGAUGE_INSTANTANEOUS: {"power_register": 1234}}
-        assert await async_setup_entry(hass, config_entry)
+        config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()
 
-        registry = hass.helpers.entity_registry.async_get(hass)
+        registry = hass.helpers.entity_registry.async_get()
         assert "sensor.egauge_power_register" in registry.entities
 
         state = hass.states.get("sensor.egauge_power_register")
@@ -82,10 +84,11 @@ async def test_historical_sensor_creation(
         }
         dt = datetime(2020, 1, 1)
         start_of_day.return_value = dt
-        assert await async_setup_entry(hass, config_entry)
+        config_entry.add_to_hass(hass)
+        await hass.config_entries.async_setup(config_entry.entry_id)
         await hass.async_block_till_done()
 
-        registry = hass.helpers.entity_registry.async_get(hass)
+        registry = hass.helpers.entity_registry.async_get()
         assert "sensor.egauge_daily_power_register" in registry.entities
         assert "sensor.egauge_weekly_power_register" in registry.entities
         assert "sensor.egauge_monthly_power_register" in registry.entities

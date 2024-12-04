@@ -26,12 +26,13 @@ async def test_instantaneous_sensor_creation(
 ):
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
 
-    with patch(
-        "egauge_async.EgaugeClient.get_instantaneous_registers"
-    ) as get_registers, patch(
-        "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
-        new_callable=AsyncMock,
-    ) as update:
+    with (
+        patch("egauge_async.EgaugeClient.get_instantaneous_registers") as get_registers,
+        patch(
+            "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
+            new_callable=AsyncMock,
+        ) as update,
+    ):
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {EGAUGE_INSTANTANEOUS: {"power_register": 1234}}
         config_entry.add_to_hass(hass)
@@ -64,14 +65,14 @@ async def test_historical_sensor_creation(
 ):
     config_entry = MockConfigEntry(domain=DOMAIN, data=MOCK_CONFIG, entry_id="test")
 
-    with patch(
-        "egauge_async.EgaugeClient.get_historical_registers"
-    ) as get_registers, patch(
-        "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
-        new_callable=AsyncMock,
-    ) as update, patch(
-        "homeassistant.util.dt.start_of_local_day"
-    ) as start_of_day:
+    with (
+        patch("egauge_async.EgaugeClient.get_historical_registers") as get_registers,
+        patch(
+            "custom_components.egauge.EGaugeDataUpdateCoordinator._async_update_data",
+            new_callable=AsyncMock,
+        ) as update,
+        patch("homeassistant.util.dt.start_of_local_day") as start_of_day,
+    ):
         get_registers.return_value = {"power_register": "P"}
         update.return_value = {
             EGAUGE_HISTORICAL: {
@@ -116,7 +117,8 @@ async def test_historical_sensor_creation(
             "register_type_code": "P",
             "data_type": EGAUGE_HISTORICAL,
             "device_class": "energy",
-            "state_class": "total_increasing",
+            "state_class": "total",
+            "last_reset": "2020-01-01T00:00:00",
             "friendly_name": "egauge todays power_register",
             "unit_of_measurement": "kWh",
             "icon": "hass:flash",

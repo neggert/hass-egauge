@@ -4,9 +4,9 @@
   "codeowners": ["@neggert"],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/neggert/egauge",
+  "documentation": "https://github.com/neggert/hass-egauge",
   "iot_class": "local_polling",
-  "issue_tracker": "https://github.com/neggert/egauge/issues",
+  "issue_tracker": "https://github.com/neggert/hass-egauge/issues",
   "requirements": ["egauge-async==0.1.2"],
   "version": "0.4.1"
 }

@@ -1,10 +1,12 @@
 """Sensor platform for integration_blueprint."""
 
 import asyncio
+import datetime
 
 from homeassistant import core
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.sensor.const import SensorDeviceClass, SensorStateClass
+import homeassistant.util.dt as dt_util
 
 from . import _LOGGER
 from .const import (
@@ -119,17 +121,6 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
             data = data[self.interval]
         value = data.get(self.register_name)
         value = value * self.unit_conversion
-        if self.state_class == SensorStateClass.TOTAL_INCREASING and value < 0:
-            pv = value
-            value = abs(value)
-            _LOGGER.debug(
-                "%s is total_increasing: %s -> %s (%s)",
-                self.name,
-                pv,
-                value,
-                f"{value:.2f}",
-            )
-
         return f"{value:.2f}"
 
     @property
@@ -157,7 +148,14 @@ class EGaugeSensor(EGaugeEntity, SensorEntity):
         if self.data_type == EGAUGE_INSTANTANEOUS:
             return SensorStateClass.MEASUREMENT
         if self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:
-            return SensorStateClass.TOTAL_INCREASING
+            return SensorStateClass.TOTAL
+        return None
+
+    @property
+    def last_reset(self) -> datetime.datetime | None:
+        """Return the last time the sensor was reset"""
+        if self.data_type == EGAUGE_HISTORICAL and self.interval == TODAY:
+            return dt_util.start_of_local_day()
         return None
 
     @property

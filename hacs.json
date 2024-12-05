@@ -1,6 +1,6 @@
 {
   "name": "eGauge",
   "hacs": "1.6.0",
-  "homeassistant": "2021.9.0",
+  "homeassistant": "2024.6.0",
   "render_readme": true
 }

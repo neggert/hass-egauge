@@ -16,7 +16,7 @@ DOMAIN = "egauge"
 NAME = "eGauge"
 MODEL = "XML API"
 DOMAIN_DATA = f"{DOMAIN}_data"
-VERSION = "0.0.0"
+VERSION = "0.5.1"
 
 ISSUE_URL = "https://github.com/neggert/egauge/issues"
 

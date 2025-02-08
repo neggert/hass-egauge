@@ -2,14 +2,14 @@
 
 from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
-    _DataUpdateCoordinatorT,
+    DataUpdateCoordinator,
 )
 
 from .const import DOMAIN, MODEL, NAME
 
 
 class EGaugeEntity(CoordinatorEntity):
-    def __init__(self, coordinator: _DataUpdateCoordinatorT, config_entry):
+    def __init__(self, coordinator: DataUpdateCoordinator, config_entry):
         super().__init__(coordinator)
         self.config_entry = config_entry
         self.entry_id = self.config_entry.entry_id

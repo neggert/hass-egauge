@@ -16,12 +16,15 @@ from .const import MOCK_CONFIG
 @pytest.fixture(autouse=True)
 def bypass_setup_fixture():
     """Prevent setup."""
-    with patch(
-        "custom_components.egauge.async_setup",
-        return_value=True,
-    ), patch(
-        "custom_components.egauge.async_setup_entry",
-        return_value=True,
+    with (
+        patch(
+            "custom_components.egauge.async_setup",
+            return_value=True,
+        ),
+        patch(
+            "custom_components.egauge.async_setup_entry",
+            return_value=True,
+        ),
     ):
         yield
 
@@ -38,7 +41,7 @@ async def test_successful_config_flow(hass, bypass_get_registers):
     )
 
     # Check that the config flow shows the user form as the first step
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == data_entry_flow.FlowResultType.FORM
     assert result["step_id"] == "user"
 
     # If a user were to enter `test_username` for username and `test_password`
@@ -49,7 +52,7 @@ async def test_successful_config_flow(hass, bypass_get_registers):
 
     # Check that the config flow is complete and a new entry is created with
     # the input data
-    assert result["type"] == data_entry_flow.RESULT_TYPE_CREATE_ENTRY
+    assert result["type"] == data_entry_flow.FlowResultType.CREATE_ENTRY
     assert result["title"] == "http://test.local"
     assert result["data"] == MOCK_CONFIG
     assert result["result"]
@@ -67,14 +70,14 @@ async def test_failed_config_flow(hass, error_on_get_data):
         DOMAIN, context={"source": config_entries.SOURCE_USER}
     )
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == data_entry_flow.FlowResultType.FORM
     assert result["step_id"] == "user"
 
     result = await hass.config_entries.flow.async_configure(
         result["flow_id"], user_input=MOCK_CONFIG
     )
 
-    assert result["type"] == data_entry_flow.RESULT_TYPE_FORM
+    assert result["type"] == data_entry_flow.FlowResultType.FORM
     assert result["errors"] == {"base": "auth"}
 
 
